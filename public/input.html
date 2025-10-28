@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nothing But a MURMUR. - Input</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    * {
+      font-family: 'Helvetica Neue Custom', 'Helvetica Neue', Arial, sans-serif !important;
+    }
+
+    .input-stage {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #D3D3D5;
+    }
+
+    /* 黑色雾状遮罩 - 中间 */
+    .input-stage::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 85%;
+      height: 110%;
+      background: radial-gradient(ellipse at center, 
+        rgba(0, 0, 0, 0.35) 0%, 
+        rgba(0, 0, 0, 0.18) 45%, 
+        transparent 75%);
+      border-radius: 48% 52% 47% 53%;
+      z-index: 1;
+      pointer-events: none;
+      filter: blur(80px);
+    }
+
+    /* 右上角粉紫色雾 */
+    .input-stage::after {
+      content: '';
+      position: absolute;
+      top: -15%;
+      right: -8%;
+      width: 55%;
+      height: 80%;
+      background: radial-gradient(ellipse at top right, 
+        #CBDCEF 0%, 
+        rgba(203, 220, 239, 0.7) 35%, 
+        transparent 75%);
+      border-radius: 45% 55% 48% 52%;
+      z-index: 1;
+      pointer-events: none;
+      filter: blur(100px);
+    }
+
+    /* 右边粉色雾 */
+    .fog-right {
+      position: absolute;
+      top: 15%;
+      right: -12%;
+      width: 60%;
+      height: 90%;
+      background: radial-gradient(ellipse at center right, 
+        #DECAED 0%, 
+        rgba(222, 202, 237, 0.6) 40%, 
+        transparent 75%);
+      border-radius: 52% 48% 53% 47%;
+      z-index: 1;
+      pointer-events: none;
+      filter: blur(110px);
+    }
+
+    /* 底部雾 */
+    .fog-bottom {
+      position: absolute;
+      bottom: -20%;
+      left: 15%;
+      width: 75%;
+      height: 65%;
+      background: radial-gradient(ellipse at bottom, 
+        rgba(0, 0, 0, 0.25) 0%, 
+        rgba(0, 0, 0, 0.12) 45%, 
+        transparent 75%);
+      border-radius: 50% 50% 48% 52%;
+      z-index: 1;
+      pointer-events: none;
+      filter: blur(90px);
+    }
+
+    .input-design {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      transform-origin: center center;
+      z-index: 2;
+    }
+
+    .page-title {
+      position: absolute;
+      left: 50%;
+      top: 250px;
+      transform: translateX(-50%);
+      font-weight: 700;
+      font-size: 50pt;
+      letter-spacing: -2px;
+      color: #000;
+      white-space: nowrap;
+      z-index: 10;
+      pointer-events: auto;
+      text-align: center;
+      opacity: 0;
+      animation: titleSlideIn 1s ease 0.2s forwards, titlePulse 4s ease-in-out 1.2s infinite;
+    }
+
+    @keyframes titleSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    @keyframes titlePulse {
+      0%, 100% {
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      50% {
+        text-shadow: 0 0 20px rgba(0, 0, 0, 0.2),
+                     0 2px 10px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    .hint {
+      position: absolute;
+      left: 50%;
+      top: 345px;
+      transform: translateX(-50%);
+      width: 900px;
+      text-align: center;
+      font-size: 18pt;
+      font-weight: 400;
+      color: #fff;
+      z-index: 8;
+      font-family: "Courier New", monospace;
+      line-height: 24pt;
+      letter-spacing: 0;
+      opacity: 0;
+      animation: hintFadeIn 0.8s ease 0.6s forwards;
+    }
+
+    @keyframes hintFadeIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    .hint u {
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+    }
+
+    .ui-area {
+      position: absolute;
+      left: 50%;
+      top: 455px;
+      transform: translateX(-50%);
+      width: 650px;
+      height: 150px;
+      border-radius: 24px;
+      background: #fff;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.8),
+                  0 0 60px rgba(255, 255, 255, 0.4),
+                  0 4px 20px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 24px;
+      z-index: 7;
+      pointer-events: auto;
+      opacity: 0;
+      animation: inputAreaSlideUp 1s ease 0.8s forwards, inputGlow 3s ease-in-out 1.8s infinite;
+      position: relative;
+    }
+
+    @keyframes inputAreaSlideUp {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scale(1);
+      }
+    }
+
+    @keyframes inputGlow {
+      0%, 100% {
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.8),
+                    0 0 60px rgba(255, 255, 255, 0.4),
+                    0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+      50% {
+        box-shadow: 0 0 40px rgba(255, 255, 255, 1),
+                    0 0 80px rgba(255, 255, 255, 0.6),
+                    0 4px 25px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    textarea.input {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      resize: none;
+      font-size: 28pt;
+      font-weight: 400;
+      color: #666;
+      line-height: 1.2;
+      padding: 8px 4px;
+      text-align: left;
+    }
+
+    textarea.input::placeholder {
+      font-size: 20pt;
+      color: rgba(0, 0, 0, 0.3);
+    }
+
+    .char-counter {
+      position: absolute;
+      bottom: 22px;
+      right: 28px;
+      font-size: 14pt;
+      font-weight: 400;
+      color: #999;
+      pointer-events: none;
+      z-index: 8;
+      transition: color 0.3s ease;
+    }
+
+    .char-counter.over-limit {
+      color: #ff3333;
+      font-weight: 600;
+    }
+
+    .btn-container {
+      position: absolute;
+      left: 50%;
+      top: 620px;
+      transform: translateX(-50%);
+      z-index: 7;
+      pointer-events: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      animation: btnContainerFadeIn 0.8s ease 1s forwards;
+    }
+
+    @keyframes btnContainerFadeIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    .pass-btn {
+      width: 180px;
+      height: 50px;
+      border-radius: 25px;
+      background: #D3D6DB;
+      border: none;
+      box-shadow: 0 0 20px rgba(211, 214, 219, 0.8),
+                  0 0 40px rgba(211, 214, 219, 0.4),
+                  0 2px 12px rgba(0, 0, 0, 0.1);
+      font-size: 18pt;
+      font-weight: 400;
+      color: #000;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.18s ease, background 0.12s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pass-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.5s ease, height 0.5s ease;
+    }
+
+    .pass-btn:hover {
+      background: #E5E8ED;
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(211, 214, 219, 1),
+                  0 0 50px rgba(211, 214, 219, 0.6),
+                  0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .pass-btn:hover::after {
+      width: 200px;
+      height: 200px;
+    }
+
+    .pass-btn:active {
+      transform: scale(0.96);
+    }
+
+    .pass-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .group-info {
+      font-size: 14px;
+      color: #fff;
+      text-align: center;
+    }
+
+    /* Rain canvas (z-index below ellipses) */
+    #rain-canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* Drop layer for ellipses (z-index above rain) */
+    #drop-layer {
+      position: absolute;
+      left: 0;
+      top: 1.5%;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .loading-overlay {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .loading-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* Responsive scaling */
+    @media (max-width: 1920px) {
+      .input-design {
+        transform: scale(calc(min(100vw / 1920, 100vh / 1080)));
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .input-design {
+        transform: scale(0.6);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="input-stage">
+    <div class="fog-right"></div>
+    <div class="fog-bottom"></div>
+    <div id="design" class="input-design">
+      <div class="page-title">Nothing But a MURMUR.</div>
+      <div class="hint">
+        Please add one word, one character, or one punctuation mark<br>
+        <u>to this sentence...</u>
+      </div>
+      <div class="ui-area" id="ui-area">
+        <textarea id="textInput" class="input" placeholder="Start typing..." maxlength="500"></textarea>
+        <div class="char-counter" id="charCounter">0/20</div>
+      </div>
+      <div class="btn-container">
+        <button id="passBtn" class="pass-btn">Pass on</button>
+        <div class="group-info">
+          <span>Group <strong id="groupNumber">-</strong></span> · 
+          <span>Entry <strong id="entryPosition">-</strong>/5</span>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="rain-canvas"></canvas>
+    <div id="drop-layer"></div>
+    
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading"></div>
+    </div>
+  </div>
+
+  <script src="/js/audio.js"></script>
+  <script src="/js/animations.js"></script>
+  <script>
+    // Initialize animation system
+    const animSystem = new AnimationSystem('rain-canvas', 'drop-layer');
+    
+    // State
+    let currentGroup = null;
+    let previousText = '';
+    let userIdentifier = null;
+    let animatedLength = 0; // Track how many characters have been animated
+    let maxAllowedChars = 20; // Default for first person
+    let currentPosition = 1; // Track current position in group
+
+    // Generate user identifier (simple hash of timestamp + random)
+    function generateUserIdentifier() {
+      return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    // Load current group
+    async function loadCurrentGroup() {
+      try {
+        showLoading(true);
+        const response = await fetch('/api/current-group');
+        const data = await response.json();
+        
+        if (data.success) {
+          currentGroup = data.group;
+          currentPosition = currentGroup.entry_count + 1;
+          
+          document.getElementById('groupNumber').textContent = currentGroup.group_number;
+          document.getElementById('entryPosition').textContent = currentPosition;
+          
+          // Set character limit based on position
+          // First person (position 1): 20 chars, others (positions 2-5): 10 chars
+          maxAllowedChars = (currentPosition === 1) ? 20 : 10;
+          
+          // Set previous text
+          if (currentGroup.entries && currentGroup.entries.length > 0) {
+            const lastEntry = currentGroup.entries[currentGroup.entries.length - 1];
+            previousText = lastEntry.text_content || '';
+            document.getElementById('textInput').value = previousText;
+            // Track that we've already loaded this text (no animation needed)
+            animatedLength = previousText.length;
+          } else {
+            previousText = '';
+            document.getElementById('textInput').value = '';
+            animatedLength = 0;
+          }
+          
+          // Update textarea maxlength
+          const textInput = document.getElementById('textInput');
+          textInput.maxLength = previousText.length + maxAllowedChars;
+          
+          // Update character counter
+          updateCharCounter();
+          
+          // Store user identifier
+          if (!userIdentifier) {
+            userIdentifier = generateUserIdentifier();
+          }
+        }
+        showLoading(false);
+      } catch (error) {
+        console.error('Error loading group:', error);
+        alert('Failed to load group. Please refresh the page.');
+        showLoading(false);
+      }
+    }
+
+    // Show/hide loading
+    function showLoading(show) {
+      const overlay = document.getElementById('loadingOverlay');
+      if (show) {
+        overlay.classList.add('show');
+      } else {
+        overlay.classList.remove('show');
+      }
+    }
+
+    // Update character counter
+    function updateCharCounter() {
+      const textInput = document.getElementById('textInput');
+      const charCounter = document.getElementById('charCounter');
+      const currentText = textInput.value;
+      const addedChars = currentText.length - previousText.length;
+      
+      charCounter.textContent = `${addedChars}/${maxAllowedChars}`;
+      
+      // Toggle over-limit class
+      if (addedChars > maxAllowedChars) {
+        charCounter.classList.add('over-limit');
+      } else {
+        charCounter.classList.remove('over-limit');
+      }
+    }
+
+    // Handle input
+    const textInput = document.getElementById('textInput');
+    let lastValue = '';
+    
+    textInput.addEventListener('input', (e) => {
+      const currentValue = e.target.value;
+      
+      // Check if user is trying to modify previous text
+      if (previousText && !currentValue.startsWith(previousText)) {
+        e.target.value = previousText;
+        alert('You can only add text, not modify previous content!');
+        updateCharCounter();
+        return;
+      }
+      
+      // Check character limit
+      const addedChars = currentValue.length - previousText.length;
+      if (addedChars > maxAllowedChars) {
+        // Revert to previous value
+        e.target.value = lastValue;
+        alert(`You can only add ${maxAllowedChars} characters!`);
+        updateCharCounter();
+        return;
+      }
+      
+      // Update character counter
+      updateCharCounter();
+      
+      // Only play sound and animation for NEW characters (not already animated)
+      if (currentValue.length > animatedLength) {
+        const newChars = currentValue.slice(animatedLength);
+        
+        for (let i = 0; i < newChars.length; i++) {
+          const char = newChars[i];
+          const sol = audioSystem.letterToSolfege(char);
+          
+          setTimeout(() => {
+            audioSystem.playForChar(char);
+            if (sol) {
+              animSystem.spawnDrop(char, sol);
+            }
+          }, i * 50);
+        }
+        
+        // Update animated length
+        animatedLength = currentValue.length;
+      } else if (currentValue.length < animatedLength) {
+        // User deleted some text (backspace)
+        animatedLength = currentValue.length;
+      }
+      
+      lastValue = currentValue;
+    });
+
+    // Prevent deletion of previous text
+    textInput.addEventListener('keydown', (e) => {
+      if ((e.key === 'Backspace' || e.key === 'Delete')) {
+        const selStart = textInput.selectionStart;
+        const selEnd = textInput.selectionEnd;
+        
+        // If trying to delete within previous text, prevent it
+        if (selStart <= previousText.length) {
+          e.preventDefault();
+          // Move cursor to end of previous text
+          textInput.setSelectionRange(previousText.length, previousText.length);
+        }
+      }
+    });
+
+    // Submit entry
+    document.getElementById('passBtn').addEventListener('click', async () => {
+      const textContent = textInput.value.trim();
+      
+      if (!textContent) {
+        alert('Please type something!');
+        return;
+      }
+      
+      if (textContent === previousText) {
+        alert('Please add some text!');
+        return;
+      }
+      
+      // Validate character limit
+      const addedChars = textContent.length - previousText.length;
+      if (addedChars > maxAllowedChars) {
+        alert(`You can only add ${maxAllowedChars} characters!`);
+        return;
+      }
+      
+      const addedText = textContent.slice(previousText.length);
+      const solfege = Array.from(addedText)
+        .map(char => audioSystem.letterToSolfege(char))
+        .filter(Boolean)
+        .join(' ');
+      
+      try {
+        showLoading(true);
+        const response = await fetch('/api/submit-entry', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            groupId: currentGroup.id,
+            textContent: textContent,
+            addedText: addedText,
+            solfege: solfege,
+            userIdentifier: userIdentifier
+          })
+        });
+        
+        const data = await response.json();
+        showLoading(false);
+        
+        if (data.success) {
+          // Navigate to transition page
+          window.location.href = '/transition';
+        } else {
+          alert(data.message || 'Failed to submit entry');
+        }
+      } catch (error) {
+        console.error('Error submitting entry:', error);
+        alert('Failed to submit. Please try again.');
+        showLoading(false);
+      }
+    });
+
+    // Initialize
+    loadCurrentGroup();
+    lastValue = previousText;
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nothing But a MURMUR. - Gallery</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    * {
+      font-family: 'Helvetica Neue Custom', 'Helvetica Neue', Arial, sans-serif !important;
+    }
+
+    body {
+      background: #000;
+    }
+
+    .gallery-stage {
+      min-height: 100vh;
+      padding: 60px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #000;
+    }
+
+    .gallery-header {
+      display: none;
+    }
+
+    .gallery-container {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 80px;
+    }
+
+    .group-card {
+      background: transparent;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      transition: none;
+    }
+
+    .group-card:hover {
+      transform: none;
+      box-shadow: none;
+      background: transparent;
+    }
+
+    .group-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .group-number {
+      font-size: 32pt;
+      font-weight: 400;
+      font-style: italic;
+      color: #fff;
+      text-align: center;
+    }
+
+    .group-status {
+      display: none;
+    }
+
+    .entries-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .entry-item {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px 0;
+      background: transparent;
+      border-radius: 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.683);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.559);
+      transition: none;
+    }
+
+    .entry-item:hover {
+      background: transparent;
+      transform: none;
+    }
+
+    .entry-position {
+      display: none;
+    }
+
+    .entry-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .entry-label {
+      font-size: 11pt;
+      color: #fff;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .entry-notation {
+      font-size: 11pt;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    .entry-text {
+      font-size: 16pt;
+      color: #fff;
+      line-height: 1.6;
+      word-break: break-word;
+      margin-left: 50px;
+    }
+
+    .entry-solfege {
+      display: none;
+    }
+
+    .entry-time {
+      display: none;
+    }
+
+    .pagination {
+      display: none;
+      width: 100%;
+      max-width: 900px;
+      margin-top: 60px;
+      margin-bottom: 100px;
+      padding: 30px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .pagination-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 14pt;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .pagination-btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+
+    .pagination-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .pagination-info {
+      color: #fff;
+      font-size: 14pt;
+      padding: 0 15px;
+    }
+
+    .page-jump {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .page-jump-label {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 13pt;
+    }
+
+    .page-jump-input {
+      width: 60px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+      color: #fff;
+      font-size: 14pt;
+      text-align: center;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .page-jump-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+
+    .page-jump-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      padding: 8px 16px;
+      font-size: 13pt;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .page-jump-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 300px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 80px 40px;
+      color: #fff;
+    }
+
+    .empty-state-icon {
+      font-size: 64pt;
+      margin-bottom: 20px;
+      opacity: 0.3;
+    }
+
+    .empty-state-text {
+      font-size: 20pt;
+      margin-bottom: 12px;
+    }
+
+    .empty-state-subtext {
+      font-size: 14pt;
+      opacity: 0.7;
+    }
+
+    .back-btn {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: none;
+      font-size: 20pt;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: none;
+      transition: opacity 0.2s ease, text-shadow 0.3s ease;
+      z-index: 100;
+      font-style: italic;
+      text-decoration: underline;
+      text-underline-offset: 6px;
+    }
+
+    .back-btn:hover {
+      background: transparent;
+      transform: translateX(-50%);
+      box-shadow: none;
+      opacity: 0.7;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+    }
+
+    .group-date {
+      font-size: 12pt;
+      color: rgba(255, 255, 255, 0.5);
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* Animation Effects */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes titleGlow {
+      0%, 100% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      }
+      50% {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
+                     0 0 30px rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    @keyframes cardFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .gallery-stage {
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .group-card {
+      opacity: 0;
+      animation: cardFadeIn 0.6s ease forwards;
+      animation-delay: calc(var(--index) * 0.1s);
+    }
+
+    .group-number {
+      animation: titleGlow 4s ease-in-out infinite;
+    }
+
+    .entry-text {
+      transition: text-shadow 0.3s ease;
+    }
+
+    .entry-text:hover {
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="gallery-stage">
+    <div class="gallery-header">
+      <h1 class="gallery-title">Nothing But a MURMUR.</h1>
+      <p class="gallery-subtitle">All the whispers, collected</p>
+    </div>
+
+    <div class="gallery-container" id="galleryContainer">
+      <div class="loading-container">
+        <div class="loading"></div>
+      </div>
+    </div>
+
+    <div class="pagination" id="pagination" style="display: none;">
+      <div class="pagination-controls">
+        <button class="pagination-btn" id="firstBtn">⇤ First</button>
+        <button class="pagination-btn" id="prevBtn">← Prev</button>
+        <span class="pagination-info" id="pageInfo">Page 1 of 1</span>
+        <button class="pagination-btn" id="nextBtn">Next →</button>
+        <button class="pagination-btn" id="lastBtn">Last ⇥</button>
+      </div>
+      <div class="page-jump">
+        <span class="page-jump-label">Go to page:</span>
+        <input type="number" class="page-jump-input" id="pageInput" min="1" placeholder="1">
+        <button class="page-jump-btn" id="jumpBtn">Go</button>
+      </div>
+    </div>
+
+    <button class="back-btn" onclick="window.location.href='/'">Let's go back to the beginning.</button>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    const limit = 5;
+    let totalPages = 1;
+
+    console.log('🌐 Backend API: http://localhost:3000');
+    console.log('📊 Completed Groups API: http://localhost:3000/api/completed-groups');
+
+    async function loadGroups(page) {
+      try {
+        const container = document.getElementById('galleryContainer');
+        container.innerHTML = '<div class="loading-container"><div class="loading"></div></div>';
+
+        const response = await fetch(`/api/completed-groups?page=${page}&limit=${limit}`);
+        const data = await response.json();
+
+        if (data.success) {
+          if (data.groups.length === 0) {
+            container.innerHTML = `
+              <div class="empty-state">
+                <div class="empty-state-icon">💭</div>
+                <div class="empty-state-text">No murmurs yet...</div>
+                <div class="empty-state-subtext">Be the first to start a conversation!</div>
+              </div>
+            `;
+            document.getElementById('pagination').style.display = 'none';
+            return;
+          }
+
+          currentPage = page;
+          totalPages = data.pagination.totalPages;
+
+          // Render groups
+          container.innerHTML = '';
+          data.groups.forEach((group, index) => {
+            const card = createGroupCard(group, index);
+            container.appendChild(card);
+          });
+
+          // Update pagination
+          updatePagination();
+        }
+      } catch (error) {
+        console.error('Error loading groups:', error);
+        document.getElementById('galleryContainer').innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">⚠️</div>
+            <div class="empty-state-text">Failed to load groups</div>
+            <div class="empty-state-subtext">Please refresh the page</div>
+          </div>
+        `;
+      }
+    }
+
+    function createGroupCard(group, index) {
+      const card = document.createElement('div');
+      card.className = 'group-card';
+      card.style.setProperty('--index', index);
+
+      // Format date from first entry
+      let dateText = 'Oct 26';
+      if (group.entries.length > 0) {
+        const date = new Date(group.entries[0].created_at);
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        dateText = `${months[date.getMonth()]} ${date.getDate()}`;
+      }
+
+      let entriesHTML = '';
+      let cumulativeNotation = '';
+      group.entries.forEach((entry, idx) => {
+        // Accumulate notation like text accumulates
+        if (entry.solfege) {
+          cumulativeNotation += (cumulativeNotation ? ' ' : '') + entry.solfege;
+        }
+        const notation = cumulativeNotation ? `<span class="entry-notation">${escapeHtml(cumulativeNotation)}</span>` : '';
+        entriesHTML += `
+          <div class="entry-item">
+            <div class="entry-content">
+              <div class="entry-label">
+                <span>Line ${idx + 1}</span>
+                ${notation}
+              </div>
+              <div class="entry-text">${escapeHtml(entry.text_content)}</div>
+            </div>
+          </div>
+        `;
+      });
+
+      card.innerHTML = `
+        <div class="group-header">
+          <div>
+            <div class="group-number">Gossip ${group.group_number}</div>
+            <div class="group-date">${dateText}</div>
+          </div>
+        </div>
+        <div class="entries-list">
+          ${entriesHTML}
+        </div>
+      `;
+
+      return card;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function updatePagination() {
+      document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+      document.getElementById('firstBtn').disabled = currentPage <= 1;
+      document.getElementById('prevBtn').disabled = currentPage <= 1;
+      document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+      document.getElementById('lastBtn').disabled = currentPage >= totalPages;
+      document.getElementById('pageInput').max = totalPages;
+      document.getElementById('pageInput').placeholder = currentPage.toString();
+      document.getElementById('pagination').style.display = 'flex';
+    }
+
+    function goToPage(page) {
+      if (page >= 1 && page <= totalPages && page !== currentPage) {
+        loadGroups(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Pagination handlers
+    document.getElementById('firstBtn').addEventListener('click', () => {
+      goToPage(1);
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      goToPage(currentPage - 1);
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      goToPage(currentPage + 1);
+    });
+
+    document.getElementById('lastBtn').addEventListener('click', () => {
+      goToPage(totalPages);
+    });
+
+    document.getElementById('jumpBtn').addEventListener('click', () => {
+      const input = document.getElementById('pageInput');
+      const targetPage = parseInt(input.value);
+      if (!isNaN(targetPage)) {
+        goToPage(targetPage);
+        input.value = '';
+      }
+    });
+
+    document.getElementById('pageInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('jumpBtn').click();
+      }
+    });
+
+    // Initial load
+    loadGroups(1);
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - Gossip</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    body {
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(213,210,212,0.96) 0%, rgba(213,210,212,0.75) 20%, rgba(213,210,212,0) 45%),
+        radial-gradient(circle at 85% 10%, rgba(210,196,224,0.9) 0%, rgba(210,196,224,0.55) 30%, rgba(210,196,224,0) 58%),
+        radial-gradient(circle at 80% 90%, rgba(205,225,246,0.98) 0%, rgba(205,225,246,0.75) 36%, rgba(205,225,246,0) 60%),
+        radial-gradient(circle at 30% 80%, rgba(141,139,141,0.9) 0%, rgba(91,92,94,0.06) 60%, rgba(255,255,255,0) 100%),
+        linear-gradient(180deg, rgba(141,139,141,0.04) 0%, rgba(255,255,255,0.01) 100%);
+      background-attachment: fixed;
+      font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .login-stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 480px;
+      animation: fadeInScale 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .login-card {
+      background: rgba(229, 228, 233, 0.85);
+      backdrop-filter: blur(20px);
+      border: none;
+      border-radius: 24px;
+      padding: 60px 50px;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(141, 139, 141, 0.2);
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .login-title {
+      font-size: 32pt;
+      font-weight: 600;
+      color: #8d8b8d;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    .login-subtitle {
+      font-size: 14pt;
+      color: rgba(141, 139, 141, 0.7);
+      font-weight: normal;
+      font-style: italic;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group {
+      margin-bottom: 28px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12pt;
+      color: #8d8b8d;
+      margin-bottom: 8px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 16px 18px;
+      font-size: 14pt;
+      border: none;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.7);
+      color: #8d8b8d;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      box-shadow: inset 0 2px 8px rgba(141, 139, 141, 0.06);
+    }
+
+    .form-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: inset 0 2px 12px rgba(141, 139, 141, 0.1),
+                  0 0 0 3px rgba(141, 139, 141, 0.15);
+    }
+
+    .form-input::placeholder {
+      color: rgba(141, 139, 141, 0.5);
+      font-style: italic;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 18px;
+      font-size: 14pt;
+      font-weight: 600;
+      background: rgba(141, 139, 141, 0.25);
+      color: #5b5c5e;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      position: relative;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 20px rgba(141, 139, 141, 0.15);
+    }
+
+    .login-btn:hover {
+      background: rgba(141, 139, 141, 0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(141, 139, 141, 0.25);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 20px rgba(141, 139, 141, 0.15);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .error-message {
+      background: rgba(141, 139, 141, 0.15);
+      border: none;
+      border-radius: 12px;
+      color: #5b5c5e;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      font-size: 12pt;
+      font-weight: normal;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 12px rgba(141, 139, 141, 0.1);
+    }
+
+    .error-message.show {
+      display: flex;
+      animation: messageShake 0.5s ease, messageFadeIn 0.3s ease;
+    }
+
+    .error-message::before {
+      content: '';
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%235b5c5e" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>') center/contain no-repeat;
+    }
+
+    @keyframes messageShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    @keyframes messageFadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .back-link a {
+      color: #8d8b8d;
+      text-decoration: none;
+      font-size: 12pt;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.3px;
+      padding: 8px 16px;
+      border-radius: 20px;
+    }
+
+    .back-link a:hover {
+      background: rgba(141, 139, 141, 0.1);
+      color: #5b5c5e;
+      transform: translateX(-4px);
+    }
+  </style>
+</head>
+<body>
+  <div class="login-stage">
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <h1 class="login-title">Admin Panel</h1>
+          <p class="login-subtitle">Nothing But a MURMUR.</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label class="form-label" for="username">Username</label>
+            <input 
+              type="text" 
+              id="username" 
+              class="form-input" 
+              placeholder="Enter username"
+              autocomplete="username"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              class="form-input" 
+              placeholder="Enter password"
+              autocomplete="current-password"
+              required
+            >
+          </div>
+
+          <button type="submit" class="login-btn" id="loginBtn">
+            Login
+          </button>
+        </form>
+
+        <div class="back-link">
+          <a href="/">← Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const errorMessage = document.getElementById('errorMessage');
+    const loginBtn = document.getElementById('loginBtn');
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.classList.add('show');
+      setTimeout(() => {
+        errorMessage.classList.remove('show');
+      }, 5000);
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        showError('Please enter both username and password');
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Logging in...';
+
+      try {
+        const response = await fetch('/admin/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Redirect to dashboard
+          window.location.href = '/admin-dashboard';
+        } else {
+          showError(data.message || 'Login failed');
+          loginBtn.disabled = false;
+          loginBtn.textContent = 'Login';
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        showError('Network error. Please try again.');
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Login';
+      }
+    });
+
+    // Check if already logged in
+    async function checkAuth() {
+      try {
+        const response = await fetch('/admin/check-auth', {
+          credentials: 'include'
+        });
+        const data = await response.json();
+        
+        if (data.authenticated) {
+          window.location.href = '/admin-dashboard';
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+      }
+    }
+
+    checkAuth();
+  </script>
+</body>
+</html>
+

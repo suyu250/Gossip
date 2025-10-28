@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nothing But a MURMUR. - Transition</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    * {
+      font-family: 'Helvetica Neue Custom', 'Helvetica Neue', Arial, sans-serif !important;
+    }
+
+    body {
+      background: #000;
+    }
+
+    .transition-stage {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: #000;
+    }
+
+    .transition-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeInScale 0.8s ease;
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .circle-container {
+      position: relative;
+      width: 700px;
+      height: 700px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .glow-circle {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      animation: circleGlow 3s ease-in-out infinite;
+    }
+
+    .glow-circle::before,
+    .glow-circle::after {
+      display: none;
+    }
+
+    .inner-circles {
+      display: none;
+    }
+
+    .text-content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .center-text {
+      font-size: 42pt;
+      font-weight: 400;
+      color: #fff;
+      font-style: normal;
+      text-align: center;
+      white-space: nowrap;
+      line-height: 1.2;
+      animation: textGlow 4s ease-in-out infinite;
+    }
+
+    .transition-message {
+      font-size: 20pt;
+      color: #fff;
+      text-align: center;
+      text-decoration: underline;
+      text-underline-offset: 6px;
+      cursor: pointer;
+      transition: opacity 0.3s ease, text-shadow 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .transition-message:hover {
+      opacity: 0.8;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+    }
+
+    @keyframes circleGlow {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.2),
+                    0 0 40px rgba(255, 255, 255, 0.1),
+                    inset 0 0 20px rgba(255, 255, 255, 0.05);
+      }
+      50% {
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.3),
+                    0 0 60px rgba(255, 255, 255, 0.15),
+                    inset 0 0 30px rgba(255, 255, 255, 0.08);
+      }
+    }
+
+    @keyframes textGlow {
+      0%, 100% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      }
+      50% {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
+                     0 0 30px rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    .skip-hint {
+      display: none;
+    }
+
+    .float-ellipse {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="transition-stage" id="stage">
+    <div class="float-ellipse ellipse-1"></div>
+    <div class="float-ellipse ellipse-2"></div>
+    <div class="float-ellipse ellipse-3"></div>
+    
+    <div class="transition-content">
+      <div class="circle-container">
+        <div class="glow-circle"></div>
+        <div class="inner-circles">
+          <div class="inner-circle inner-circle-1"></div>
+          <div class="inner-circle inner-circle-2"></div>
+          <div class="inner-circle inner-circle-3"></div>
+        </div>
+        <div class="text-content">
+          <div class="center-text">Thank you for your voice.</div>
+          <div class="transition-message">View past creations</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="skip-hint">Click anywhere to continue</div>
+  </div>
+
+  <script>
+    // Only allow manual navigation by clicking the message
+    document.querySelector('.transition-message').addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigateToGallery();
+    });
+
+    function navigateToGallery() {
+      document.querySelector('.transition-stage').style.opacity = '0';
+      document.querySelector('.transition-stage').style.transition = 'opacity 0.5s';
+      setTimeout(() => {
+        window.location.href = '/gallery';
+      }, 500);
+    }
+  </script>
+</body>
+</html>
+

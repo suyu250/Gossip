@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nothing But a MURMUR.</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    body {
+      background: #000;
+    }
+
+    .landing-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      opacity: 0;
+      animation: containerFadeIn 1.5s ease 0.3s forwards;
+    }
+
+    @keyframes containerFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .main-title {
+      font-family: 'Helvetica Neue Custom', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 60pt;
+      font-weight: bold;
+      letter-spacing: 5px;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      position: relative;
+      animation: titleGlowPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes titleGlowPulse {
+      0%, 100% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3),
+                     0 0 20px rgba(255, 255, 255, 0.2),
+                     0 0 30px rgba(255, 255, 255, 0.1);
+      }
+      50% {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
+                     0 0 30px rgba(255, 255, 255, 0.4),
+                     0 0 40px rgba(255, 255, 255, 0.2),
+                     0 0 50px rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .subtitle {
+      display: none;
+    }
+
+    .start-btn {
+      font-family: 'Courier New Custom', 'Courier New', monospace;
+      padding: 14px 50px;
+      font-size: 20pt;
+      border-radius: 50px;
+      background: #fff;
+      border: none;
+      color: #000;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      animation: btnFloat 2.5s ease-in-out infinite;
+    }
+
+    @keyframes btnFloat {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    .start-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(200, 200, 200, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    .start-btn:hover {
+      background: #e0e0e0;
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.5),
+                  0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .start-btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .start-btn:active {
+      transform: translateY(-5px) scale(0.98);
+    }
+
+    .start-btn span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .decorative-elements {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="decorative-elements">
+      <div class="float-circle circle-1"></div>
+      <div class="float-circle circle-2"></div>
+      <div class="float-circle circle-3"></div>
+    </div>
+    
+    <div class="design">
+      <div class="landing-container">
+        <h1 class="main-title">Let's gossip a little.</h1>
+        <p class="subtitle">
+          A collaborative whisper game where words become melody.<br>
+          Add your voice to the conversation, one word at a time.
+        </p>
+        <button class="start-btn" id="startBtn">
+          <span>Continue</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('startBtn').addEventListener('click', () => {
+      // Add fade out animation
+      document.querySelector('.stage').classList.add('fade-out');
+      
+      // Navigate after animation
+      setTimeout(() => {
+        window.location.href = '/input';
+      }, 600);
+    });
+  </script>
+</body>
+</html>
+
